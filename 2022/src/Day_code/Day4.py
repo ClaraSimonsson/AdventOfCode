@@ -1,7 +1,6 @@
 import re
 
 def handle_input(f):
-    # Create set with pair = {[start, end], [start,end]} for each pair, where each list is the section span
     pairs = []
     for line in f.readlines():
         pair = re.split('[-,]', line.strip())
