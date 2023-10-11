@@ -12,11 +12,9 @@ def solve_input(matrix):
     for row in range(1, matrix_len-1):
         for col in range(1, matrix_len-1):
             visible, scenic_score = if_visible(matrix, row, col)
-            if visible:
-                visible_trees += 1
+            visible_trees += 1 if visible else 0
             highest_scenic_score = scenic_score if (scenic_score > highest_scenic_score) else highest_scenic_score
-    print(highest_scenic_score)
-    return visible_trees
+    return [visible_trees, highest_scenic_score]
 
 def if_visible(matrix, row, col):
     visible = False
