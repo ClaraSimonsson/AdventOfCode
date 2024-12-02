@@ -2,23 +2,61 @@ def handle_input(f):
     return [row.split(' ') for row in f.read().splitlines()]
 
 def solve_input(input):
-    coordinates = dict(H=(0,0), T=(0,0))
+    coordinates = create_rope(9)
     visited_positions = set()
-    visited_positions.add(coordinates.get('T'))
+    visited_positions.add(coordinates.get(9))
     for instruction in input:
         direction = instruction[0]
         steps = int(instruction[1])
-        coordinates['H'], coordinates['T'], visited_positions = move_rope(direction, steps, coordinates, visited_positions)
+        coordinates, visited_positions = move_rope(direction, steps, coordinates, visited_positions)
+    print_coords(visited_positions)
     return len(visited_positions)
+
+def print_coords(visited_positions):
+    min_x, max_x, min_y, max_y = find_interval(visited_positions)
+    for row in range(min_y, max_y+1):
+        str = ''
+        for col in range(min_x, max_x+1):
+            if ((col, row) in visited_positions):
+                str = str + '#'
+            else:
+                str = str + '.'
+        print(str)
+    
+def find_interval(visited_positions):
+    min_x, max_x, min_y, max_y = 0, 0, 0, 0
+    for x, y in visited_positions:
+        if (x < min_x):
+            min_x = x
+        elif (x > max_x):
+            max_x = x
+        if (y < min_y):
+            min_y = y
+        elif (y > max_y):
+            max_y = y
+    return min_x, max_x, min_y, max_y
+
+def create_rope(nr_knots):
+    rope = dict(H=(0,0))
+    for i in range(1, nr_knots+1):
+        rope[i] = (0,0)
+    return rope
 
 def move_rope(direction, steps, coordinates, visited_positions):
     head = coordinates.get('H')
-    tail = coordinates.get('T')
-    for _ in range(0, steps):
-        head = move_head(direction, head)  
-        tail = move_tail(head, tail)
-        visited_positions.add(tail)
-    return head, tail, visited_positions
+    #tail = coordinates.get('T')
+    for _ in range(0, steps): 
+        for key, val in coordinates.items():
+            if (key == 'H'):
+                head = move_head(direction, head) 
+                previous_coords = head
+            else:
+                coordinates[key] = move_tail(previous_coords, val)
+                previous_coords = coordinates[key]
+        #tail = move_tail(head, tail)
+        visited_positions.add(coordinates[9])
+    coordinates[head] = head
+    return coordinates, visited_positions
         
 def move_head(direction, coord):
     x, y = get_coordinates(coord)
