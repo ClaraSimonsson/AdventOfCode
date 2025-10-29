@@ -1,7 +1,7 @@
-from day_solution import day4 as day
+from day_solution import day5 as day
 
 def main():
-    day_puzzle = 'day4'
+    day_puzzle = 'day5'
     day_input = '{}.txt'.format(day_puzzle)
     with open('puzzle_input/{}'.format(day_input)) as f:        
         input = day.handle_input(f)
